@@ -1,0 +1,5 @@
+{
+  "name": "eslint-plugin-agama-i18n",
+  "version": "0.1.0",
+  "main": "eslint-plugin-agama-i18n.js"
+}
