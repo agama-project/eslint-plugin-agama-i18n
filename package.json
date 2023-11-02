@@ -1,5 +1,9 @@
 {
   "name": "eslint-plugin-agama-i18n",
   "version": "0.1.0",
+  "description": "A simple ESLint plugin which checks that only string literals are passed to the translation functions",
+  "homepage": "https://github.com/openSUSE/eslint-plugin-agama-i18n",
+  "repository": "openSUSE/eslint-plugin-agama-i18n",
+  "license": "MIT",
   "main": "eslint-plugin-agama-i18n.js"
 }
