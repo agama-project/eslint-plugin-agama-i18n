@@ -3,7 +3,7 @@
 This directory contains a simple ESLint plugin which checks that only string
 literals are passed to the translation functions.
 
-It is closely tied to the [Agama](https://github.com/openSUSE/agama) project and
+It is closely tied to the [Agama](https://github.com/agama-project/agama) project and
 probably does not make much sense for other projects.
 
 ## Disabling the Check
