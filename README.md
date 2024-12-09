@@ -1,5 +1,8 @@
 # The ESLint Plugin
 
+![NPM Version](https://img.shields.io/npm/v/eslint-plugin-agama-i18n)
+[![CI](https://github.com/agama-project/eslint-plugin-agama-i18n/actions/workflows/ci.yml/badge.svg)](https://github.com/agama-project/eslint-plugin-agama-i18n/actions/workflows/ci.yml)
+
 This directory contains a simple ESLint plugin which checks that only string
 literals are passed to the translation functions.
 

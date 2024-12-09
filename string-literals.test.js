@@ -6,9 +6,7 @@
 const { RuleTester } = require("eslint");
 const stringLiteralsRule = require("./string-literals");
 
-const ruleTester = new RuleTester({
-  parserOptions: { ecmaVersion: 2015 }
-});
+const ruleTester = new RuleTester();
 
 ruleTester.run(
   "string-literals",
