@@ -14,7 +14,7 @@
   "main": "eslint-plugin-agama-i18n.js",
   "scripts": {
     "test": "node string-literals.test.js",
-    "tag": "VERSION=`jq -r .version package.json` && echo git tag -s -m \"Version $VERSION\" v$VERSION && echo git push origin v$VERSION"
+    "tag": "VERSION=`jq -r .version package.json` && git tag -s -m \"Version $VERSION\" v$VERSION && git push origin v$VERSION"
   },
   "peerDependencies": {
     "eslint": ">=9.0.0"
