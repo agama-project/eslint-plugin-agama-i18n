@@ -9,6 +9,34 @@ literals are passed to the translation functions.
 It is closely tied to the [Agama](https://github.com/agama-project/agama) project and
 probably does not make much sense for other projects.
 
+## Installation
+
+Run
+
+```shell
+npm install --save-dev @agama-project/eslint-plugin-agama-i18n
+```
+
+Update your ESLint configuration:
+
+```js
+// eslint.config.mjs
+import agamaI18nEslintPlugin from "@agama-project/eslint-plugin-agama-i18n";
+
+export default [
+  {
+    plugins: {
+      "agama-i18n": agamaI18nEslintPlugin,
+    },
+  },
+  {
+    rules: {
+      "agama-i18n/string-literals": "error",
+    }
+  }
+];
+```
+
 ## Disabling the Check
 
 In some rare cases using a variable instead of a string literal is correct. In
@@ -23,6 +51,12 @@ const sz = getSize();
 // eslint-disable-next-line agama-i18n/string-literals
 return <span>{_(sz)}</span>;
 ```
+
+## Publishing new version
+
+The NPM package is automatically published by a GitHub Action when a version tag is created.
+
+To create a new tag update the version in `package.json` and run the `npm run tag` command.
 
 ## Links
 
