@@ -8,7 +8,8 @@ const translations = ["_", "n_", "N_", "Nn_"];
 // names of the plural translation functions
 const plurals = ["n_", "Nn_"];
 
-const errorMsgLiteral = "Use a string literal argument in the translation functions";
+const errorMsgLiteral =
+  "Use a string literal argument in the translation functions";
 const errorMsgMissing = "Missing argument";
 
 /**
@@ -19,7 +20,16 @@ const errorMsgMissing = "Missing argument";
 function isStringLiteral(node) {
   if (!node) return false;
 
-  return node.type === "Literal" && (typeof node.value === "string");
+  // plain string literal
+  if (node.type === "Literal" && typeof node.value === "string") return true;
+
+  // or a binary expression with "+" operator and string literals or a nested "+" operator
+  return (
+    node.type === "BinaryExpression" &&
+    node.operator === "+" &&
+    isStringLiteral(node.left) &&
+    isStringLiteral(node.right)
+  );
 }
 
 /**
@@ -45,7 +55,8 @@ module.exports = {
   meta: {
     type: "problem",
     docs: {
-      description: "Check that only string literals are passed to the translation functions.",
+      description:
+        "Check that only string literals are passed to the translation functions.",
     },
   },
   create: function (context) {
@@ -62,7 +73,7 @@ module.exports = {
         if (plurals.includes(node.callee.name)) {
           checkNode(node.arguments[1], node, context);
         }
-      }
+      },
     };
-  }
+  },
 };

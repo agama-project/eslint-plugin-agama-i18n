@@ -1,7 +1,7 @@
 {
   "name": "@agama-project/eslint-plugin-agama-i18n",
-  "version": "1.0.0",
-  "description": "A simple ESLint plugin which checks that only string literals are passed to the translation functions",
+  "version": "1.1.0",
+  "description": "A simple ESLint plugin which checks usage of the translation functions",
   "homepage": "https://github.com/agama-project/eslint-plugin-agama-i18n",
   "repository": {
     "type": "git",
@@ -13,7 +13,7 @@
   },
   "main": "eslint-plugin-agama-i18n.js",
   "scripts": {
-    "test": "node string-literals.test.js",
+    "test": "find . -name '*.test.js' -exec node \\{\\} \\;",
     "tag": "VERSION=`jq -r .version package.json` && git tag -s -m \"Version $VERSION\" v$VERSION && git push origin v$VERSION"
   },
   "peerDependencies": {
