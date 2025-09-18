@@ -1,13 +1,18 @@
 # The ESLint Plugin
 
-![NPM Version](https://img.shields.io/npm/v/eslint-plugin-agama-i18n)
+![NPM Version](https://img.shields.io/npm/v/@agama-project/eslint-plugin-agama-i18n)
 [![CI](https://github.com/agama-project/eslint-plugin-agama-i18n/actions/workflows/ci.yml/badge.svg)](https://github.com/agama-project/eslint-plugin-agama-i18n/actions/workflows/ci.yml)
 
-This directory contains a simple ESLint plugin which checks that only string
-literals are passed to the translation functions.
+This directory contains a simple ESLint plugin which checks for some common
+translation problems:
 
-It is closely tied to the [Agama](https://github.com/agama-project/agama) project and
-probably does not make much sense for other projects.
+- Only string literals are allowed as arguments in the translation functions (or
+  their concatenation using the `+` operator)
+- Translation functions are not allowed at the top level (they are evaluated too
+  early, before the actual translations are available)
+
+It is closely tied to the [Agama](https://github.com/agama-project/agama)
+project and probably does not make much sense for other projects.
 
 ## Installation
 
@@ -32,6 +37,7 @@ export default [
   {
     rules: {
       "agama-i18n/string-literals": "error",
+      "agama-i18n/top-level-translation": "error"
     }
   }
 ];
@@ -52,11 +58,23 @@ const sz = getSize();
 return <span>{_(sz)}</span>;
 ```
 
+## Testing changes during development
+
+To test new changes locally during development install the plugin into an Agama
+checkout using command `npm install ../../eslint-plugin-agama-i18n/` (the path
+should point to checkout of this plugin).
+
+This creates a symlink pointing to the plugin directory so it will always use
+the latest files from the local plugin, that is very convenient during
+development.
+
 ## Publishing new version
 
-The NPM package is automatically published by a GitHub Action when a version tag is created.
+The NPM package is automatically published by a GitHub Action when a version tag
+is created.
 
-To create a new tag update the version in `package.json` and run the `npm run tag` command.
+To create a new tag update the version in `package.json` and run the `npm run
+tag` command.
 
 ## Links
 
