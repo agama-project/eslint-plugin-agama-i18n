@@ -13,7 +13,7 @@
   },
   "main": "eslint-plugin-agama-i18n.js",
   "scripts": {
-    "test": "node string-literals.test.js && node top-level-translation.test.js",
+    "test": "find . -name '*.test.js' -exec node \\{\\} \\;",
     "tag": "VERSION=`jq -r .version package.json` && git tag -s -m \"Version $VERSION\" v$VERSION && git push origin v$VERSION"
   },
   "peerDependencies": {
