@@ -1,5 +1,15 @@
 # Eslint-plugin-agama-i18n changelog
 
+## 1.2.0
+
+- Track the global constants initialized with `N_()` so not using a string
+  literal in this construct is not reported as an error:
+
+  ```js
+  const foo = N_("foo");
+  () => _(foo);
+  ```
+
 ## 1.1.0
 
 - Allow merging strings with + operator in the translation functions (e.g.

@@ -37,12 +37,16 @@ function isStringLiteral(node) {
  * @param {Object} node the node to check
  * @param {Object} parentNode parent node for reporting error if `node` is undefined
  * @param {Object} context the context for reporting an error
+ * @param {Object} variables list of the declared global variables initialized with N_()
  */
-function checkNode(node, parentNode, context) {
+function checkNode(node, parentNode, context, variables) {
   if (node) {
-    // string literal?
+    // not a string literal
     if (!isStringLiteral(node)) {
-      context.report(node, errorMsgLiteral);
+      // not a global variable
+      if (node.type !== "Identifier" || !variables.includes(node.name)) {
+        context.report(node, errorMsgLiteral);
+      }
     }
   } else {
     // missing argument
@@ -60,6 +64,9 @@ module.exports = {
     },
   },
   create: function (context) {
+    // track the global variables initialized with N_() function
+    const variables = [];
+
     return {
       // callback for handling function calls
       CallExpression(node) {
@@ -67,11 +74,24 @@ module.exports = {
         if (!translations.includes(node.callee.name)) return;
 
         // check the first argument
-        checkNode(node.arguments[0], node, context);
+        checkNode(node.arguments[0], node, context, variables);
 
         // check also the second argument for the plural forms
         if (plurals.includes(node.callee.name)) {
-          checkNode(node.arguments[1], node, context);
+          checkNode(node.arguments[1], node, context, variables);
+        }
+      },
+      // variable declaration
+      VariableDeclarator(node) {
+        if (
+          node.init &&
+          // initialized via N_()
+          node.init.type === "CallExpression" &&
+          node.init.callee.name === "N_" &&
+          // in the top level context
+          node.parent.parent.type === "Program"
+        ) {
+          variables.push(node.id.name);
         }
       },
     };
