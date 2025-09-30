@@ -20,6 +20,12 @@ ruleTester.run("string-literals", stringLiteralsRule, {
     { code: '_("foo" + "bar" + "baz")' },
     { code: '_("foo" + "bar" + "baz" + "qux")' },
     { code: 'n_("foo" + "bar", "baz" + "qux", count)' },
+    // using a top level variable initialized with N_()
+    { code: 'const foo = N_("foo"); () => _(foo)' },
+    { code: "const foo = N_('foo'); () => _(foo)" },
+    {
+      code: 'const foo = N_("foo"); const bar = N_("bar"); () => _(foo) + _(bar)',
+    },
   ],
   // invalid examples, these should fail
   invalid: [
@@ -44,5 +50,13 @@ ruleTester.run("string-literals", stringLiteralsRule, {
     { code: '_("42" + 42)', errors: 1 },
     { code: '_(42 + "42")', errors: 1 },
     { code: '_(foo.toString() + "42")', errors: 1 },
+    // different variable
+    { code: 'const foo = N_("foo"); () => _(bar)', errors: 1 },
+    // initialized using an unknown function
+    { code: 'const foo = foo("foo"); () => _(bar)', errors: 1 },
+    // N_() cannot be used again
+    { code: 'const foo = N_("foo"); () => N_(bar)', errors: 1 },
+    // not at top level (use the _() function directly)
+    { code: '() => {const foo = N_("foo"); _(foo)}', errors: 1 },
   ],
 });
