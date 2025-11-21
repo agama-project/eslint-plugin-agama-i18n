@@ -10,6 +10,9 @@ translation problems:
   their concatenation using the `+` operator)
 - Translation functions are not allowed at the top level (they are evaluated too
   early, before the actual translations are available)
+- The text should not contain multiple white space characters in a sequence (in
+  HTML they are collapsed to a single space anyway and multiple spaces might be
+  confusing for translators.)
 
 It is closely tied to the [Agama](https://github.com/agama-project/agama)
 project and probably does not make much sense for other projects.
@@ -37,7 +40,8 @@ export default [
   {
     rules: {
       "agama-i18n/string-literals": "error",
-      "agama-i18n/top-level-translation": "error"
+      "agama-i18n/top-level-translation": "error",
+      "agama-i18n/multiple-space": "error"
     }
   }
 ];
