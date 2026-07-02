@@ -20,6 +20,9 @@
 Note: Internally the rule actually checks for using the `MarkedString` type. If
 that is detected an error is reported.
 
+- Improved the `string-literals` rule to use the TypeScript types to avoid false
+  positives when `N_()` result is used in `_()` function.
+
 ## 1.3.0
 
 - Check multiple white space characters in translated messages.

@@ -1,7 +1,9 @@
 /*
- * Copyright (c) [2023] SUSE LLC
+ * Copyright (c) [2023,2026] SUSE LLC
  *
  */
+
+const { ESLintUtils } = require("@typescript-eslint/utils");
 
 // names of all translation functions
 const translations = ["_", "n_", "N_", "Nn_"];
@@ -37,16 +39,23 @@ function isStringLiteral(node) {
  * @param {Object} node the node to check
  * @param {Object} parentNode parent node for reporting error if `node` is undefined
  * @param {Object} context the context for reporting an error
- * @param {Object} variables list of the declared global variables initialized with N_()
+ * @param {Object} services TypeScript parsing service to handle types
  */
-function checkNode(node, parentNode, context, variables) {
+function checkNode(node, parentNode, context, services) {
   if (node) {
-    // not a string literal
-    if (!isStringLiteral(node)) {
-      // not a global variable
-      if (node.type !== "Identifier" || !variables.includes(node.name)) {
+    if (isStringLiteral(node)) return;
+
+    // _() and n_() can accept texts previously marked with N_() and Nn_()
+    if (["_", "n_"].includes(parentNode.callee.name)) {
+      const type = services.getTypeAtLocation(node);
+      const typeName = type.aliasSymbol?.escapedName || type.intrinsicName;
+
+      if (typeName !== "MarkedString") {
         context.report(node, errorMsgLiteral);
       }
+    } else {
+      // wrong argument
+      context.report(parentNode, errorMsgLiteral);
     }
   } else {
     // missing argument
@@ -61,11 +70,11 @@ module.exports = {
     docs: {
       description:
         "Check that only string literals are passed to the translation functions.",
+      requiresTypeChecking: true,
     },
   },
   create: function (context) {
-    // track the global variables initialized with N_() function
-    const variables = [];
+    const services = ESLintUtils.getParserServices(context);
 
     return {
       // callback for handling function calls
@@ -74,24 +83,11 @@ module.exports = {
         if (!translations.includes(node.callee.name)) return;
 
         // check the first argument
-        checkNode(node.arguments[0], node, context, variables);
+        checkNode(node.arguments[0], node, context, services);
 
         // check also the second argument for the plural forms
         if (plurals.includes(node.callee.name)) {
-          checkNode(node.arguments[1], node, context, variables);
-        }
-      },
-      // variable declaration
-      VariableDeclarator(node) {
-        if (
-          node.init &&
-          // initialized via N_()
-          node.init.type === "CallExpression" &&
-          node.init.callee.name === "N_" &&
-          // in the top level context
-          node.parent.parent.type === "Program"
-        ) {
-          variables.push(node.id.name);
+          checkNode(node.arguments[1], node, context, services);
         }
       },
     };
