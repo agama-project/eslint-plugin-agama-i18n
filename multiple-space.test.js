@@ -3,8 +3,14 @@
  *
  */
 
+const test = require("node:test");
 const { RuleTester } = require("eslint");
 const multipleSpaceRule = require("./multiple-space");
+
+RuleTester.afterAll = test.after;
+RuleTester.describe = test.describe;
+RuleTester.it = test.it;
+RuleTester.itOnly = test.it.only;
 
 const ruleTester = new RuleTester();
 

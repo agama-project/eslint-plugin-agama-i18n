@@ -4,8 +4,14 @@
  * Unit tests for the opt level translations check.
  */
 
+const test = require("node:test");
 const { RuleTester } = require("eslint");
 const topLevelRule = require("./top-level-translation");
+
+RuleTester.afterAll = test.after;
+RuleTester.describe = test.describe;
+RuleTester.it = test.it;
+RuleTester.itOnly = test.it.only;
 
 const ruleTester = new RuleTester();
 
