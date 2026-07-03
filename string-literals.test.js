@@ -2,11 +2,28 @@
  * Copyright (c) [2023] SUSE LLC
  *
  */
-
-const { RuleTester } = require("eslint");
+const test = require("node:test");
+const { RuleTester } = require("@typescript-eslint/rule-tester");
 const stringLiteralsRule = require("./string-literals");
 
-const ruleTester = new RuleTester();
+RuleTester.afterAll = test.after;
+RuleTester.describe = test.describe;
+RuleTester.it = test.it;
+RuleTester.itOnly = test.it.only;
+
+const ruleTester = new RuleTester({
+  languageOptions: {
+    parserOptions: {
+      // enable typed linting
+      projectService: {
+        allowDefaultProject: ["*.ts*"],
+      },
+    },
+  },
+});
+
+// shared N_() function definition
+const N_ = "function N_(s:string): MarkedString {return s as MarkedString}";
 
 ruleTester.run("string-literals", stringLiteralsRule, {
   // valid code examples, these should pass
@@ -20,12 +37,14 @@ ruleTester.run("string-literals", stringLiteralsRule, {
     { code: '_("foo" + "bar" + "baz")' },
     { code: '_("foo" + "bar" + "baz" + "qux")' },
     { code: 'n_("foo" + "bar", "baz" + "qux", count)' },
-    // using a top level variable initialized with N_()
-    { code: 'const foo = N_("foo"); () => _(foo)' },
-    { code: "const foo = N_('foo'); () => _(foo)" },
+    // using a variable initialized with N_()
+    { code: `${N_}; const foo = N_("foo"); () => _(foo)` },
+    { code: `${N_}; const foo = N_('foo'); () => _(foo)` },
     {
-      code: 'const foo = N_("foo"); const bar = N_("bar"); () => _(foo) + _(bar)',
+      code: `${N_}; const foo = N_("foo"); const bar = N_("bar"); () => _(foo) + _(bar)`,
     },
+    // not optimal but still valid (rather use _("foo") directly)
+    { code: `${N_}; () => {const foo = N_("foo"); _(foo)}` },
   ],
   // invalid examples, these should fail
   invalid: [
@@ -51,12 +70,10 @@ ruleTester.run("string-literals", stringLiteralsRule, {
     { code: '_(42 + "42")', errors: 1 },
     { code: '_(foo.toString() + "42")', errors: 1 },
     // different variable
-    { code: 'const foo = N_("foo"); () => _(bar)', errors: 1 },
+    { code: `${N_}; const foo = N_("foo"); () => _(bar)`, errors: 1 },
     // initialized using an unknown function
     { code: 'const foo = foo("foo"); () => _(bar)', errors: 1 },
     // N_() cannot be used again
-    { code: 'const foo = N_("foo"); () => N_(bar)', errors: 1 },
-    // not at top level (use the _() function directly)
-    { code: '() => {const foo = N_("foo"); _(foo)}', errors: 1 },
+    { code: 'const foo = N_("foo"); () => N_(foo)', errors: 1 },
   ],
 });

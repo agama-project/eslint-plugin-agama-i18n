@@ -3,6 +3,9 @@
 
 name: Publish NPM Package
 
+permissions:
+  contents: read
+
 on:
   # runs when creating a version tag
   push:

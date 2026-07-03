@@ -1,5 +1,28 @@
 # Eslint-plugin-agama-i18n changelog
 
+## 1.4.0
+
+- Added a new `marked-string` rule. This rule checks that the texts marked with
+  `N_()` function are not used in React components as they need to be translated
+  with the `_()` function before displaying in the UI.
+
+```js
+  // not translated, only marked for translation
+  const text = N_("text");
+
+  // error
+  <div>{text}</div>
+
+  // correct
+  <div>{_(text)}</div>
+```
+
+Note: Internally the rule actually checks for using the `MarkedString` type. If
+that is detected an error is reported.
+
+- Improved the `string-literals` rule to use the TypeScript types to avoid false
+  positives when `N_()` result is used in `_()` function.
+
 ## 1.3.0
 
 - Check multiple white space characters in translated messages.

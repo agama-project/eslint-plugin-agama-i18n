@@ -1,6 +1,6 @@
 {
   "name": "@agama-project/eslint-plugin-agama-i18n",
-  "version": "1.3.0",
+  "version": "1.4.0",
   "description": "A simple ESLint plugin which checks usage of the translation functions",
   "homepage": "https://github.com/agama-project/eslint-plugin-agama-i18n",
   "repository": {
@@ -25,6 +25,11 @@
     "eslint-plugin"
   ],
   "devDependencies": {
-    "eslint": "^9.10.0"
+    "@typescript-eslint/rule-tester": "^8.62.1",
+    "eslint": "^9.34.0",
+    "typescript-eslint": "^8.62.1"
+  },
+  "dependencies": {
+    "@typescript-eslint/utils": "^8.62.1"
   }
 }
