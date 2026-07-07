@@ -7,6 +7,7 @@ const stringLiteralsRule = require("./string-literals");
 const topLevelRule = require("./top-level-translation");
 const multipleSpaceRule = require("./multiple-space");
 const markedString = require("./marked-string");
+const translatedProp = require("./translated-prop");
 
 module.exports = {
   rules: {
@@ -15,5 +16,6 @@ module.exports = {
     "top-level-translation": topLevelRule,
     "multiple-space": multipleSpaceRule,
     "marked-string": markedString,
+    "translated-prop": translatedProp,
   },
 };
