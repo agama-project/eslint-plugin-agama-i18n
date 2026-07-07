@@ -1,5 +1,29 @@
 # Eslint-plugin-agama-i18n changelog
 
+## 1.5.0
+
+- Added a new `translated-prop` rule. A fail-closed, type-aware check that
+  user-facing JSX props receive translated texts (`TranslatedString`), never
+  plain strings:
+
+```jsx
+// error: valid TypeScript, untranslated text in the UI
+<ToggleGroupItem text="Summary" />
+
+// correct
+<ToggleGroupItem text={_("Summary")} />
+```
+
+Attributes like `aria-label`, `placeholder` or `title` are checked on every
+element. Third-party components are covered through a committed, human-authored
+map classifying their string props as translatable or machine-facing; a
+component or prop without a classification is an error, and a version pin in
+the map forces a review on every package update. See the README for the
+details.
+
+Note: the rule requires typed linting
+(https://typescript-eslint.io/getting-started/typed-linting/).
+
 ## 1.4.0
 
 - Added a new `marked-string` rule. This rule checks that the texts marked with
