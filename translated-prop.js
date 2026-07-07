@@ -237,7 +237,9 @@ module.exports = {
      */
     function isTranslated(type) {
       if (type.aliasSymbol?.escapedName === translatedType) return true;
-      return type.isUnion() && type.types.every((t) => isTranslated(t));
+      // an intersection including the translated type is assignable to it
+      if (type.isIntersection()) return type.types.some(isTranslated);
+      return type.isUnion() && type.types.every(isTranslated);
     }
 
     /**
@@ -249,7 +251,10 @@ module.exports = {
       return unionParts(type).some((part) => {
         if (isTranslated(part)) return false;
         // treat `any` as a plain string: the rule fails closed
-        return isStringOrAny(part) || part.isStringLiteral();
+        if (isStringOrAny(part) || part.isStringLiteral()) return true;
+        // a branded intersection (string & { tag }) other than the
+        // translated type still carries a plain string
+        return part.isIntersection() && part.types.some(containsPlainString);
       });
     }
 

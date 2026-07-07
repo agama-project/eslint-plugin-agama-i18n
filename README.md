@@ -66,8 +66,9 @@ rule covers the remaining gap, props on third-party components typed as plain
 ```
 
 A checked prop must receive a `TranslatedString` value (the result of the
-`_()` or `n_()` functions); string literals, template literals and
-plain-`string` typed expressions are reported.
+`_()` or `n_()` functions); string literals, template literals,
+plain-`string` typed expressions and strings branded with other tags
+(`string & { tag }` intersections) are reported.
 
 What is checked:
 

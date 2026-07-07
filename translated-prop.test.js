@@ -63,6 +63,11 @@ ruleTester.run("translated-prop", translatedPropRule, {
       code: `${preamble} const t = _("Summary"); <Item text={t} />`,
       options: withItemEntry({ translatable: ["text"] }),
     },
+    // ternary of translated values
+    {
+      code: `${preamble} declare const c: boolean; <Item text={c ? _("A") : _("B")} />`,
+      options: withItemEntry({ translatable: ["text"] }),
+    },
     // literal-union props cannot receive arbitrary strings: out of scope
     {
       code: `${preamble} <Item variant="primary" />`,
@@ -119,6 +124,14 @@ ruleTester.run("translated-prop", translatedPropRule, {
       code: `${preamble} <Item buttonId="toggle-1" />`,
       options: withItemEntry({ translatable: ["text"] }),
       errors: [{ messageId: "unclassifiedProp" }],
+    },
+    // a string branded with another tag is still a plain string, not a
+    // translated one
+    {
+      code: `${preamble} type ProductId = string & { __tag: "ProductId" };
+        declare const id: ProductId; <Item text={id} />`,
+      options: withItemEntry({ translatable: ["text"] }),
+      errors: [{ messageId: "untranslated" }],
     },
     // classification is required even when the value is already translated
     {
