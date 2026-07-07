@@ -5,6 +5,8 @@ name: Publish NPM Package
 
 permissions:
   contents: read
+  # see https://docs.npmjs.com/trusted-publishers
+  id-token: write
 
 on:
   # runs when creating a version tag
@@ -18,15 +20,13 @@ jobs:
 
     steps:
       - name: Git Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Install Node
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v6
         with:
           node-version: "22.x"
           registry-url: "https://registry.npmjs.org"
 
       - name: Publish the NPM package
         run: npm publish
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NODE_AUTH_TOKEN }}
